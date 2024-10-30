@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import java.time.LocalDate;
 
 /**
  * Crop - Type.
@@ -27,24 +28,38 @@ public class Crop {
   @Column(nullable = false)
   private double plantedArea;
 
+  @Column(nullable = false)
+  private LocalDate plantedDate;
+
+  @Column(nullable = false)
+  private LocalDate harvestDate;
+
   @ManyToOne
   @JoinColumn(name = "farm_id", nullable = false)
   private Farm farm;
 
   // Construtores, getters e setters
-  public Crop() {
-  }
+  public Crop() {}
 
   /**
    * Instantiates a new Crop.
    *
-   * @param name        the name
+   * @param name the name
    * @param plantedArea the planted area
-   * @param farm        the farm
+   * @param plantedDate the planted date
+   * @param harvestDate the harvest date
+   * @param farm the farm
    */
-  public Crop(String name, double plantedArea, Farm farm) {
+  public Crop(
+      String name,
+      double plantedArea,
+      LocalDate plantedDate,
+      LocalDate harvestDate,
+      Farm farm) {
     this.name = name;
     this.plantedArea = plantedArea;
+    this.plantedDate = plantedDate;
+    this.harvestDate = harvestDate;
     this.farm = farm;
   }
 
@@ -72,6 +87,22 @@ public class Crop {
     this.plantedArea = plantedArea;
   }
 
+  public LocalDate getPlantedDate() {
+    return plantedDate;
+  }
+
+  public void setPlantedDate(LocalDate plantedDate) {
+    this.plantedDate = plantedDate;
+  }
+
+  public LocalDate getHarvestDate() {
+    return harvestDate;
+  }
+
+  public void setHarvestDate(LocalDate harvestDate) {
+    this.harvestDate = harvestDate;
+  }
+
   public Farm getFarm() {
     return farm;
   }
@@ -81,11 +112,11 @@ public class Crop {
   }
 
   /**
-   * Converts the Crop entity to a DTO.
+   * Converts the Crop entity to a Dto.
    *
    * @return the CropDto
    */
   public CropDto toDto() {
-    return new CropDto(id, name, plantedArea, farm.getId());
+    return new CropDto(id, name, plantedArea, plantedDate, harvestDate, farm.getId());
   }
 }

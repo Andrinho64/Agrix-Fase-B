@@ -1,31 +1,45 @@
 package com.betrybe.agrix.controller.dto;
 
+import java.time.LocalDate;
+
 /**
- * Tipo - Crop Dto.
+ * The type Crop Dto.
  */
 public class CropDto {
 
   private Long id;
   private String name;
   private double plantedArea;
+  private LocalDate plantedDate;
+  private LocalDate harvestDate;
   private Long farmId;
 
   /**
-   * Instancias de uma nova Crop Dto.
+   * Instantiates a new Crop Dto.
    *
-   * @param id          the id
-   * @param name        the name
+   * @param id the id
+   * @param name the name
    * @param plantedArea the planted area
-   * @param farmId      the farm id
+   * @param plantedDate the planted date
+   * @param harvestDate the harvest date
+   * @param farmId the farm id
    */
-  public CropDto(Long id, String name, double plantedArea, Long farmId) {
+  public CropDto(
+      Long id,
+      String name,
+      double plantedArea,
+      LocalDate plantedDate,
+      LocalDate harvestDate,
+      Long farmId) {
     this.id = id;
     this.name = name;
     this.plantedArea = plantedArea;
+    this.plantedDate = plantedDate;
+    this.harvestDate = harvestDate;
     this.farmId = farmId;
   }
 
-  // Getters & setters
+  // Getters and setters
   public Long getId() {
     return id;
   }
@@ -48,6 +62,22 @@ public class CropDto {
 
   public void setPlantedArea(double plantedArea) {
     this.plantedArea = plantedArea;
+  }
+
+  public LocalDate getPlantedDate() {
+    return plantedDate;
+  }
+
+  public void setPlantedDate(LocalDate plantedDate) {
+    this.plantedDate = plantedDate;
+  }
+
+  public LocalDate getHarvestDate() {
+    return harvestDate;
+  }
+
+  public void setHarvestDate(LocalDate harvestDate) {
+    this.harvestDate = harvestDate;
   }
 
   public Long getFarmId() {

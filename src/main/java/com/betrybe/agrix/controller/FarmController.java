@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Type - Farm controller.
+ * The type Farm controller.
  */
 @RestController
 @RequestMapping(value = "/farms")
@@ -31,7 +31,7 @@ public class FarmController {
   private CropService cropService;
 
   /**
-   * Instantiates - new Farm controller.
+   * Instantiates a new Farm controller.
    *
    * @param farmService the farm service
    * @param cropService the crop service
@@ -43,7 +43,7 @@ public class FarmController {
   }
 
   /**
-   * Resposta de entidade ao criar fazenda.
+   * Create farm response entity.
    *
    * @param farm the farm
    * @return the response entity
@@ -78,7 +78,7 @@ public class FarmController {
       return ResponseEntity.ok(farm.get());
     } else {
       return ResponseEntity.status(HttpStatus.NOT_FOUND)
-          .body("{ \"message\": \"Fazenda não encontrada!\" }");
+                .body("{ \"message\": \"Fazenda não encontrada!\" }");
     }
   }
 
@@ -86,19 +86,19 @@ public class FarmController {
    * Create crop response entity.
    *
    * @param farmId the farm id
-   * @param crop   the crop
+   * @param crop the crop
    * @return the response entity
    */
   @PostMapping("/{farmId}/crops")
-  public ResponseEntity<Object> 
-      createCrop(@PathVariable Long farmId, @RequestBody CreatedCrop crop) {
+  public ResponseEntity<Object> createCrop(
+      @PathVariable Long farmId, @RequestBody CreatedCrop crop) {
     Optional<Farm> farm = farmService.getFarmById(farmId);
     if (farm.isPresent()) {
       Crop newCrop = cropService.saveCrop(crop.toEntity(farm.get()));
       return ResponseEntity.status(HttpStatus.CREATED).body(newCrop.toDto());
     } else {
       return ResponseEntity.status(HttpStatus.NOT_FOUND)
-          .body("{ \"message\": \"Fazenda não encontrada!\" }");
+                .body("{ \"message\": \"Fazenda não encontrada!\" }");
     }
   }
 
