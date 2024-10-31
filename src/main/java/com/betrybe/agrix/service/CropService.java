@@ -1,7 +1,9 @@
 package com.betrybe.agrix.service;
 
 import com.betrybe.agrix.model.Crop;
+import com.betrybe.agrix.model.Fertilizer;
 import com.betrybe.agrix.repository.CropRepository;
+import com.betrybe.agrix.repository.FertilizerRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -10,21 +12,24 @@ import org.springframework.stereotype.Service;
 
 
 /**
- * Tipo - Crop service.
+ * The type Crop service.
  */
 @Service
 public class CropService {
 
   private CropRepository cropRepository;
+  private FertilizerRepository fertilizerRepository;
 
   /**
    * Instantiates a new Crop service.
    *
    * @param cropRepository the crop repository
+   * @param fertilizerRepository the fertilizer repository
    */
   @Autowired
-  public CropService(CropRepository cropRepository) {
+  public CropService(CropRepository cropRepository, FertilizerRepository fertilizerRepository) {
     this.cropRepository = cropRepository;
+    this.fertilizerRepository = fertilizerRepository;
   }
 
   /**
@@ -67,13 +72,38 @@ public class CropService {
   }
 
   /**
-   * Find crops by harvest date between.
+   * Associate crop with fertilizer.
    *
-   * @param start the start date
-   * @param end the end date
-   * @return the list of crops
+   * @param cropId the crop id
+   * @param fertilizerId the fertilizer id
+   * @return the associated crop
    */
+  public Crop associateCropWithFertilizer(Long cropId, Long fertilizerId) {
+    Optional<Crop> cropOptional = cropRepository.findById(cropId);
+    Optional<Fertilizer> fertilizerOptional = fertilizerRepository.findById(fertilizerId);
+
+    if (cropOptional.isEmpty()) {
+      throw new RuntimeException("Plantação não encontrada!");
+    }
+
+    if (fertilizerOptional.isEmpty()) {
+      throw new RuntimeException("Fertilizante não encontrado!");
+    }
+
+    Crop crop = cropOptional.get();
+    Fertilizer fertilizer = fertilizerOptional.get();
+
+    crop.getFertilizers().add(fertilizer);
+    fertilizer.getCrops().add(crop);
+
+    cropRepository.save(crop);
+    fertilizerRepository.save(fertilizer);
+
+    return crop;
+  }
+
   public List<Crop> findCropsByHarvestDateBetween(LocalDate start, LocalDate end) {
-    return cropRepository.findByHarvestDateBetween(start, end);
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'findCropsByHarvestDateBetween'");
   }
 }

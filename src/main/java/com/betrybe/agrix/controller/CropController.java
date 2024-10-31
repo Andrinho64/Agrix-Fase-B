@@ -13,12 +13,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Type - Crop controller.
+ * The type Crop controller.
  */
 @RestController
 @RequestMapping(value = "/crops")
@@ -27,7 +28,7 @@ public class CropController {
   private CropService cropService;
 
   /**
-   * Instancias - Nova Crop controller.
+   * Instantiates a new Crop controller.
    *
    * @param cropService the crop service
    */
@@ -79,5 +80,25 @@ public class CropController {
     List<Crop> crops = cropService.findCropsByHarvestDateBetween(start, end);
     List<CropDto> cropDtos = crops.stream().map(Crop::toDto).collect(Collectors.toList());
     return ResponseEntity.ok(cropDtos);
+  }
+
+  /**
+   * Associate crop with fertilizer response entity.
+   *
+   * @param cropId the crop id
+   * @param fertilizerId the fertilizer id
+   * @return the response entity
+   */
+  @PostMapping("/{cropId}/fertilizers/{fertilizerId}")
+  public ResponseEntity<String> associateCropWithFertilizer(
+      @PathVariable Long cropId, @PathVariable Long fertilizerId) {
+    try {
+      cropService.associateCropWithFertilizer(cropId, fertilizerId);
+      return ResponseEntity.status(HttpStatus.CREATED)
+                .body("Fertilizante e plantação associados com sucesso!");
+    } catch (RuntimeException e) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("{ \"message\": \"" + e.getMessage() + "\" }");
+    }
   }
 }
