@@ -4,11 +4,13 @@ import com.betrybe.agrix.controller.dto.FertilizerDto;
 import com.betrybe.agrix.model.Fertilizer;
 import com.betrybe.agrix.service.FertilizerService;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,5 +58,22 @@ public class FertilizerController {
     List<FertilizerDto> fertilizerDtos = fertilizers.stream().map(Fertilizer::toDto).collect(
         Collectors.toList());
     return ResponseEntity.ok(fertilizerDtos);
+  }
+
+  /**
+   * Get fertilizer by id response entity.
+   *
+   * @param id the id
+   * @return the response entity
+   */
+  @GetMapping("/{id}")
+  public ResponseEntity<Object> getFertilizerById(@PathVariable Long id) {
+    Optional<Fertilizer> fertilizer = fertilizerService.getFertilizerById(id);
+    if (fertilizer.isPresent()) {
+      return ResponseEntity.ok(fertilizer.get().toDto());
+    } else {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("{ \"message\": \"Fertilizante não encontrado!\" }");
+    }
   }
 }
