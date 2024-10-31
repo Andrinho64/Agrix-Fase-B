@@ -5,11 +5,11 @@ import com.betrybe.agrix.model.Fertilizer;
 import com.betrybe.agrix.repository.CropRepository;
 import com.betrybe.agrix.repository.FertilizerRepository;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 /**
  * The type Crop service.
@@ -102,8 +102,31 @@ public class CropService {
     return crop;
   }
 
+  /**
+   * Find crops by harvest date between.
+   *
+   * @param start the start date
+   * @param end the end date
+   * @return the list of crops
+   */
   public List<Crop> findCropsByHarvestDateBetween(LocalDate start, LocalDate end) {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'findCropsByHarvestDateBetween'");
+    return cropRepository.findByHarvestDateBetween(start, end);
+  }
+
+  /**
+   * Get fertilizers by crop id.
+   *
+   * @param cropId the crop id
+   * @return the list of fertilizers
+   */
+  public List<Fertilizer> getFertilizersByCropId(Long cropId) {
+    Optional<Crop> cropOptional = cropRepository.findById(cropId);
+
+    if (cropOptional.isEmpty()) {
+      throw new RuntimeException("Plantação não encontrada!");
+    }
+
+    Crop crop = cropOptional.get();
+    return new ArrayList<>(crop.getFertilizers());
   }
 }

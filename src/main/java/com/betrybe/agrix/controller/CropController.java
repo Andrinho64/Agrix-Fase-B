@@ -1,7 +1,9 @@
 package com.betrybe.agrix.controller;
 
 import com.betrybe.agrix.controller.dto.CropDto;
+import com.betrybe.agrix.controller.dto.FertilizerDto;
 import com.betrybe.agrix.model.Crop;
+import com.betrybe.agrix.model.Fertilizer;
 import com.betrybe.agrix.service.CropService;
 import java.time.LocalDate;
 import java.util.List;
@@ -96,6 +98,25 @@ public class CropController {
       cropService.associateCropWithFertilizer(cropId, fertilizerId);
       return ResponseEntity.status(HttpStatus.CREATED)
                 .body("Fertilizante e plantação associados com sucesso!");
+    } catch (RuntimeException e) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("{ \"message\": \"" + e.getMessage() + "\" }");
+    }
+  }
+
+  /**
+   * Get fertilizers by crop id response entity.
+   *
+   * @param cropId the crop id
+   * @return the response entity
+   */
+  @GetMapping("/{cropId}/fertilizers")
+  public ResponseEntity<Object> getFertilizersByCropId(@PathVariable Long cropId) {
+    try {
+      List<Fertilizer> fertilizers = cropService.getFertilizersByCropId(cropId);
+      List<FertilizerDto> fertilizerDtos = fertilizers.stream().map(Fertilizer::toDto).collect(
+          Collectors.toList());
+      return ResponseEntity.ok(fertilizerDtos);
     } catch (RuntimeException e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body("{ \"message\": \"" + e.getMessage() + "\" }");
