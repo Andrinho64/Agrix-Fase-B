@@ -7,9 +7,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Crop - Type.
@@ -37,6 +41,14 @@ public class Crop {
   @ManyToOne
   @JoinColumn(name = "farm_id", nullable = false)
   private Farm farm;
+
+  @ManyToMany
+  @JoinTable(
+      name = "crop_fertilizer",
+      joinColumns = @JoinColumn(name = "crop_id"),
+      inverseJoinColumns = @JoinColumn(name = "fertilizer_id")
+  )
+  private Set<Fertilizer> fertilizers = new HashSet<>();
 
   // Construtores, getters e setters
   public Crop() {}
@@ -111,11 +123,14 @@ public class Crop {
     this.farm = farm;
   }
 
-  /**
-   * Converts the Crop entity to a Dto.
-   *
-   * @return the CropDto
-   */
+  public Set<Fertilizer> getFertilizers() {
+    return fertilizers;
+  }
+
+  public void setFertilizers(Set<Fertilizer> fertilizers) {
+    this.fertilizers = fertilizers;
+  }
+
   public CropDto toDto() {
     return new CropDto(id, name, plantedArea, plantedDate, harvestDate, farm.getId());
   }
